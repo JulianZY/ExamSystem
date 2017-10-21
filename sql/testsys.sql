@@ -8,13 +8,12 @@ CREATE TABLE t_testentity(
 CREATE TABLE t_choice(
     id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     uuid VARCHAR(128) NOT NULL,
-    question_text  TEXT(512) NOT NULL DEFAULT '问题',
+    question_text  TEXT(512) NOT NULL,
     choice_a  TEXT(128) NOT NULL,
-    choice_b  TEXT(128) NOT NULL DEFAULT '答案选项',
+    choice_b  TEXT(128) NOT NULL,
     choice_c  TEXT(128) NOT NULL,
     choice_d  TEXT(128) NOT NULL,
-    right_answer  TEXT(16) NOT NULL DEFAULT '正确答案',
-    point  INTEGER NOT NULL DEFAULT '分值',
+    right_answer  TEXT(16) NOT NULL,
     create_time DATETIME NOT NULL,
     update_time DATETIME NOT NULL
 );

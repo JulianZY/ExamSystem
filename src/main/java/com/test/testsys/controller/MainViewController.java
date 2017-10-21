@@ -1,8 +1,9 @@
 package com.test.testsys.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.test.testsys.entity.Choice;
-import com.test.testsys.entity.ResultData;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.test.testsys.entity.Choice;
+import com.test.testsys.entity.ResultData;
+import com.test.testsys.service.IChoiceService;
 
 /**
  * 主页面controller
@@ -22,6 +23,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/question")
 public class MainViewController {
+	
+	@Resource
+	IChoiceService choiceService;
 
     /**
      * 无用的方法，应删除
@@ -77,21 +81,33 @@ public class MainViewController {
     @ResponseBody
     @RequestMapping(value = "/getAllQuestions.action", method = RequestMethod.GET)
     public JSONObject getAllQuestion() {
-        JSONObject result = new JSONObject();
-        /*
-            调用service层接口，返回一个list
-         */
-        List<Choice> list = new ArrayList<>();
-        Date date = new Date();
-        Choice choice1 = new Choice(1, "123", "test", "testa", "testb", "testc", "testd", "A",
-                new Timestamp(date.getTime()), new Timestamp(date.getTime()));
-        Choice choice2 = new Choice(2, "124", "test", "testa", "testb", "testc", "testd", "A",
-                new Timestamp(date.getTime()), new Timestamp(date.getTime()));
-        list.add(choice1);
-        list.add(choice2);
-
-        result.put("total", list.size());
-        result.put("rows", list);
+    	JSONObject result = new JSONObject();
+        try {
+            /*
+                调用service层接口，返回一个list
+             */
+//            List<Choice> list = new ArrayList<>();
+//            Date date = new Date();
+//            Choice choice1 = new Choice(1, "123", "test", "testa", "testb", "testc", "testd", "A",
+//                    new Timestamp(date.getTime()), new Timestamp(date.getTime()));
+//            Choice choice2 = new Choice(2, "124", "test", "testa", "testb", "testc", "testd", "A",
+//                    new Timestamp(date.getTime()), new Timestamp(date.getTime()));
+//            list.add(choice1);
+//            list.add(choice2);
+            List<Choice> list = choiceService.queryAllQuestions();
+            if(list != null && list.size() > 0) {
+            	result.put("total", list.size());
+                result.put("rows", list);
+            } else {
+            	result.put("total", 0);
+                result.put("rows",  new Object[]{});
+            }           
+            result.put("success", true);
+        } catch(Exception e) {
+        	result.put("total", 0);
+            result.put("rows", new Object[]{});
+            result.put("success", false);
+        }
         return result;
     }
 
@@ -102,13 +118,20 @@ public class MainViewController {
      */
     @ResponseBody
     @RequestMapping(value = "/delete.action", method = RequestMethod.POST)
-    public JSONObject delete(@RequestBody List<Choice> checkList) {
+    public JSONObject delete(@RequestBody List<String> checkList) {
         JSONObject result = new JSONObject();
-        /**
-         * 在这里处理checkList  @zhuyong
-         */
-
-
+        try {
+        	if(checkList != null && checkList.size() > 0) {
+        		choiceService.deleteQuestionsByUuids(checkList);
+        		result.put("message", "delete success");
+        		result.put("success", true);
+        	} else {
+        		result.put("message", "list is empty");
+        		result.put("success", false);
+        	}       	
+        } catch(Exception e) {
+            result.put("success", false);
+        }       
         result.put("success", true);  //这句话不要删除，前端要做判断，删除失败赋值false
         return result;
     }
@@ -121,10 +144,21 @@ public class MainViewController {
     @ResponseBody
     @RequestMapping(value = "/add.action", method = RequestMethod.POST)
     public JSONObject add(@RequestBody Choice choice) {
-        JSONObject result = new JSONObject();
+    	 JSONObject result = new JSONObject();
+         try {
+        	ResultData resultData = choiceService.addQuestion(choice);
+      		if(resultData.success()) {
+      			result.put("message", resultData.getMsg());
+          		result.put("success", true);
+      		} else {
+      			result.put("message", resultData.getMsg());
+          		result.put("success", false);
+      		}    	
+         } catch(Exception e) {
+             result.put("success", false);
+         }       
 
-        result.put("success", true);  //这句话不要删除，前端要做判断，删除失败赋值false
-        return result;
+         return result;
     }
 
 }

@@ -6,7 +6,7 @@
 		insert into 
 			t_choice(id,uuid,question_text,choice_a,choice_b,choice_c,choice_d,right_answer,create_time,update_time) 
 		values
-			(#{id},#{uuid},#{questionText},#{choiceA},#{choiceB},#{choiceC},#{choiceD},#{rightAnswer}#{createTime},#{updateTime})
+			(#{id},#{uuid},#{questionText},#{choiceA},#{choiceB},#{choiceC},#{choiceD},#{rightAnswer},#{createTime},#{updateTime})
 	</insert>
 	<update id="update" parameterType="Choice" >
 		update 
@@ -20,12 +20,26 @@
 			right_answer=#{rightAnswer},
 			update_time=#{updateTime}
 		where 
-			id=#{id}
+			uuid=#{uuid}
 	</update>
 	<delete id="deleteByIds" >
-		delete from t_choice where id in 
+		delete from 
+			t_choice 
+		where 
+			id 
+		in 
 		<foreach collection="list" item="ids" open="(" separator="," close=")">
 			#{ids}
+		</foreach>
+	</delete>
+	<delete id="deleteByUuids" >
+		delete from 
+			t_choice 
+		where 
+			uuid 
+		in 
+		<foreach collection="list" item="uuids" open="(" separator="," close=")">
+			#{uuids}
 		</foreach>
 	</delete>
 	<select id="queryByIds" >
@@ -34,7 +48,19 @@
 			#{ids}
 		</foreach>
 	</select>
+	<select id="queryByUuids" >
+		select * from t_choice where uuid in
+		<foreach collection="list" item="uuids" open="(" separator="," close=")">
+			#{uuids}
+		</foreach>
+	</select>
 	<select id="queryAll" >
 		select * from t_choice
+	</select>
+	<select id="queryAllUuids" >
+		select 
+			uuid 
+		from 
+			t_choice
 	</select>		
 </mapper>
