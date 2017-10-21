@@ -43,7 +43,11 @@
         iconCls:'icon-cancel',
         handler:function(){
 //            $('#allTable').datagrid({selectOnCheck:$(this).is(':checked')});
+            var ids = [];
             var rows = $('#allTable').datagrid('getSelections');
+            $.each(rows, function(i, n) {
+                ids.push(n.uuid);
+            });
             $.ajax({
                 url : "/question/delete.action",
                 type : "POST",

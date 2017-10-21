@@ -129,7 +129,7 @@
             }
             if ($('input:radio[name="rightAnswer"]:checked').val() == null
                 || $('input:radio[name="rightAnswer"]:checked').val() == "") {
-                $.messager.alert('提示', '必须选择一个正确答案', 'warning');
+                $.messager.alert('提示', '', 'warning');
                 return false;
             }
         }
