@@ -42,22 +42,22 @@
 			#{uuids}
 		</foreach>
 	</delete>
-	<select id="queryByIds" >
+	<select id="queryByIds" resultType="Choice">
 		select * from t_choice where id in
 		<foreach collection="list" item="ids" open="(" separator="," close=")">
 			#{ids}
 		</foreach>
 	</select>
-	<select id="queryByUuids" >
+	<select id="queryByUuids" resultType="Choice">
 		select * from t_choice where uuid in
 		<foreach collection="list" item="uuids" open="(" separator="," close=")">
 			#{uuids}
 		</foreach>
 	</select>
-	<select id="queryAll" >
+	<select id="queryAll"  resultType="Choice">
 		select * from t_choice
 	</select>
-	<select id="queryAllUuids" >
+	<select id="queryAllUuids"  resultType="Choice">
 		select 
 			uuid 
 		from 
