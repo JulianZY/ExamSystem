@@ -58,7 +58,7 @@ public class ChoiceServciceTest {
 		ids.add(1);
 		List<String> uuids = new ArrayList<String>();
 		uuids.add("307e2d56-4ca9-4fc2-a40f-eb2d23a7fabf");
-		result = choiceService.queryQuestionsByUuids(uuids);
+		result = choiceService.queryRandomQuestions(5);
 		System.out.println("over3");
 	}
 	

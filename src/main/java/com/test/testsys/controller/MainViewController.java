@@ -49,7 +49,15 @@ public class MainViewController {
     @RequestMapping(value = "/answerFrame.action")
     public ModelAndView showAnswerPage() {
         ModelAndView mv =new ModelAndView();
-
+        List<Choice> list = new ArrayList<Choice>();
+        Date date = new Date();
+        for (int i = 0; i < 100; i++) {
+            Choice choice1 = new Choice(i + 1, "123" + i, "test", "testa", "testb", "testc", "testd", "A",
+                    new Timestamp(date.getTime()), new Timestamp(date.getTime()));
+            list.add(choice1);
+        }
+        mv.addObject("questionList",list);
+        mv.addObject("totalTime",3600);
         mv.setViewName("question");
         return mv;
     }

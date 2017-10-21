@@ -47,20 +47,23 @@
 		<foreach collection="list" item="ids" open="(" separator="," close=")">
 			#{ids}
 		</foreach>
+		orderby create_time asc
 	</select>
 	<select id="queryByUuids" resultType="Choice">
 		select * from t_choice where uuid in
 		<foreach collection="list" item="uuids" open="(" separator="," close=")">
 			#{uuids}
 		</foreach>
+		orderby create_time asc
 	</select>
 	<select id="queryAll"  resultType="Choice">
-		select * from t_choice
+		select * from t_choice orderby create_time asc
 	</select>
-	<select id="queryAllUuids"  resultType="Choice">
+	<select id="queryAllUuids"  resultType="String">
 		select 
 			uuid 
 		from 
 			t_choice
+		orderby create_time asc
 	</select>		
 </mapper>
