@@ -69,6 +69,7 @@
     </div>
     <script>
         function submitForm(){
+            debugger;
             if (!checkForm()) {
                 return;
             }
@@ -132,6 +133,7 @@
                 $.messager.alert('提示', '', 'warning');
                 return false;
             }
+            return true;
         }
     </script>
 </body>
