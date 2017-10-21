@@ -14,4 +14,5 @@
 <link rel="stylesheet" type="text/css" href="${ctx}/easyui/demo/demo.css">
 <script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
 

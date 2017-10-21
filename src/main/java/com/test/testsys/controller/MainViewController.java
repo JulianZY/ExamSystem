@@ -21,8 +21,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/question")
-public class MainViewControll {
-    private String view;
+public class MainViewController {
 
     /**
      * 无用的方法，应删除
@@ -71,6 +70,10 @@ public class MainViewControll {
         return mv;
     }
 
+    /**
+     * 获取所有试题
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/getAllQuestions.action", method = RequestMethod.GET)
     public JSONObject getAllQuestion() {
@@ -92,6 +95,11 @@ public class MainViewControll {
         return result;
     }
 
+    /**
+     * 删除勾选试题
+     * @param checkList
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/delete.action", method = RequestMethod.POST)
     public JSONObject delete(@RequestBody List<Choice> checkList) {
@@ -105,11 +113,18 @@ public class MainViewControll {
         return result;
     }
 
-    public String getView() {
-        return view;
+    /**
+     * 添加单个试题(页面点击完成按钮)
+     * @param choice
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/add.action", method = RequestMethod.POST)
+    public JSONObject add(@RequestBody Choice choice) {
+        JSONObject result = new JSONObject();
+
+        result.put("success", true);  //这句话不要删除，前端要做判断，删除失败赋值false
+        return result;
     }
 
-    public void setView(String view) {
-        this.view = view;
-    }
 }
