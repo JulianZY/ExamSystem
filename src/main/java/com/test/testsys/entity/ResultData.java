@@ -1,9 +1,12 @@
 package com.test.testsys.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * 返回到页面的数据封装
  * create by zhengxin 2017年10月15日18:09:39
  */
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
 public class ResultData {
     private String code;
     private Object data;

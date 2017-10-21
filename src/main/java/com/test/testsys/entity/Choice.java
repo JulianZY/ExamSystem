@@ -3,12 +3,15 @@
  */
 package com.test.testsys.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.sql.Timestamp;
 
 /**
  * 题目实体类
  * @author Julia
  */
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
 public class Choice {
 	
 	private Integer id;
