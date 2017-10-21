@@ -1,5 +1,8 @@
 package com.test.testsys.controller;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -159,6 +162,35 @@ public class MainViewController {
          }       
 
          return result;
+    }
+
+    /**
+     * 获取试卷
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getExamPaper.action", method = RequestMethod.GET)
+    public JSONObject getAll() {
+        JSONObject result = new JSONObject();
+
+        List<Choice> list = new ArrayList<>();
+        Date date = new Date();
+        for (int i = 0; i < 100; i++) {
+            Choice choice1 = new Choice(i + 1, "123" + i, "test", "testa", "testb", "testc", "testd", "A",
+                    new Timestamp(date.getTime()), new Timestamp(date.getTime()));
+            list.add(choice1);
+        }
+        result.put("data", list);
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getTimmer.action", method = RequestMethod.GET)
+    public JSONObject getTimmer() {
+        JSONObject result = new JSONObject();
+
+        result.put("data", 60 * 60);
+        return result;
     }
 
 }
