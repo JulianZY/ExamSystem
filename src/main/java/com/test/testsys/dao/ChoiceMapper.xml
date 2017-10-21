@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.testsys.dao.ChoiceDao">
+	<insert id="save" parameterType="Choice" >
+		insert into 
+			t_choice(id,uuid,question_text,choice_a,choice_b,choice_c,choice_d,right_answer,create_time,update_time) 
+		values
+			(#{id},#{uuid},#{questionText},#{choiceA},#{choiceB},#{choiceC},#{choiceD},#{rightAnswer}#{createTime},#{updateTime})
+	</insert>
+	<update id="update" parameterType="Choice" >
+		update 
+			t_choice 
+		set 
+			question_text=#{questionText},
+			choice_a=#{choiceA},
+			choice_b=#{choiceB},
+			choice_c=#{choiceC},
+			choice_d=#{choiceD},
+			right_answer=#{rightAnswer},
+			update_time=#{updateTime}
+		where 
+			id=#{id}
+	</update>
+	<delete id="deleteByIds" >
+		delete from t_choice where id in 
+		<foreach collection="list" item="ids" open="(" separator="," close=")">
+			#{ids}
+		</foreach>
+	</delete>
+	<select id="queryByIds" >
+		select * from t_choice where id in
+		<foreach collection="list" item="ids" open="(" separator="," close=")">
+			#{ids}
+		</foreach>
+	</select>
+	<select id="queryAll" >
+		select * from t_choice
+	</select>		
+</mapper>

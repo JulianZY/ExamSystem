@@ -23,7 +23,8 @@
     
     <!-- 实体类,简称 -设置别名 -->  
     <typeAliases>  
-        <typeAlias alias="TestEntity" type="com.test.testsys.entity.TestEntity" />  
+        <typeAlias alias="TestEntity" type="com.test.testsys.entity.TestEntity" />
+        <typeAlias alias="Choice" type="com.test.testsys.entity.Choice" />  
     </typeAliases> 
     
 </configuration>
