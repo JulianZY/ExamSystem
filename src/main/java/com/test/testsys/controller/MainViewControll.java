@@ -33,8 +33,15 @@ public class MainViewControll {
     @RequestMapping(value = "/import.action")
     public ModelAndView showImportPage() {
         ModelAndView mv =new ModelAndView();
-
         mv.setViewName("import");
+        return mv;
+    }
+
+    @RequestMapping(value = "/all.action")
+    public ModelAndView showAllQuestionPage() {
+        ModelAndView mv =new ModelAndView();
+
+        mv.setViewName("checkAllQuestion");
         return mv;
     }
 
