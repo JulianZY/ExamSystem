@@ -30,6 +30,14 @@ public class MainViewControll {
         return mv;
     }
 
+    @RequestMapping(value = "/import.action")
+    public ModelAndView showImportPage() {
+        ModelAndView mv =new ModelAndView();
+
+        mv.setViewName("import");
+        return mv;
+    }
+
     public String getView() {
         return view;
     }
