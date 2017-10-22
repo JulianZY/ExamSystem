@@ -61,13 +61,16 @@
                 </div>
                 <div style="text-align:center;padding:5px 0; margin-top: 20px">
                     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">完成</a><span style="margin-right: 20px"></span>
-                    <%--<a href="javascript:void(0)" class="easyui-linkbutton" onclick="continueForm()" style="width:80px">保存并继续</a>--%>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="cancel()" style="width:80px">取消</a>
                 </div>
             </form>
         </div>
 
     </div>
     <script>
+        function cancel() {
+            window.location.href= "/question/all.action";
+        }
         function submitForm(){
             if (!checkForm()) {
                 return;

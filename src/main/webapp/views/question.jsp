@@ -17,16 +17,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>开始答题</title>
 
-
-    <link rel="stylesheet" type="text/css" href="${ctx}/css/default.css">
-
-    <script src="${ctx}/js/jquery.min.js"></script>
-    <script src="${ctx}/js/jquery.knob.js"></script>
-    <script src="${ctx}/js/jquery.throttle.js"></script>
-    <script src="${ctx}/js/jquery.classycountdown.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="${ctx}/css/jquery.classycountdown.css" />
-
     <style>
         .ClassyCountdownDemo { margin:0 auto 30px auto; max-width:800px; width:calc(100%); padding:30px; display:block }
         #countdown2 { background:#FFF }
@@ -43,7 +33,7 @@
                 <%----%>
             <%--</ul>--%>
         <%--</div>--%>
-
+            <label id="mark" style="color:green; font-weight:bold; font-size: x-large; margin-left: 50%"></label>
             <c:choose>
                 <c:when test="${questionList == null}">
                     <div style="margin-left: 45%; margin-top: 20%">
@@ -60,8 +50,8 @@
                             <input id="radioA" type="radio" name="rightAnswer${n.quesNo}" value="A"/><label id="choiceA">A: ${n.choiceA}</label><br>
                             <input id="radioB" type="radio" name="rightAnswer${n.quesNo}" value="B"/><label id="choiceB">B: ${n.choiceB}</label><br>
                             <input id="radioC" type="radio" name="rightAnswer${n.quesNo}" value="C"/><label id="choiceC">C: ${n.choiceC}</label><br>
-                            <input id="radioD" type="radio" name="rightAnswer${n.quesNo}" value="D"/><label id="choiceD">D: ${n.choiceD}</label>
-                            <label id="result${n.quesNo}"></label>
+                            <input id="radioD" type="radio" name="rightAnswer${n.quesNo}" value="D"/><label id="choiceD">D: ${n.choiceD}</label><br>
+                            <label id="result${n.quesNo}"></label><br>
                             <label id="right${n.quesNo}"></label>
                                 <%--<c:out value="${n}"/>--%>
                         </div>
@@ -110,18 +100,28 @@
             success : function (data) {
                 debugger;
                 if (data.success == true) {
-//                    $.messager.show({
-//                        title:'My Title',
-//                        msg:'Message will be closed after 5 seconds.',
-//                        timeout:5000,
-//                        showType:'slide'
-//                    });
-//                    $.messager.alert('My Title','Here is a info message!','info');
-                    $.messager.alert("测试结果", "您的总分是" + data.mark, "info");
+                    document.getElementById("mark").innerText = "您的得分是：" + data.mark;
+//                    $.messager.alert("测试结果", "您的总分是" + data.mark, "info");
                     var list = data.data;
+                    for (var i = 1; i < list.length + 1; i ++) {
+                        var obj = list[i-1];
+                        var quesNo = obj.quesNo;
+                        var rightAnswer = obj.rightAnswer;
+                        var state = "";
+                        if (obj.state == 1) {
+                            state = "正确";
+                            document.getElementById("result" + quesNo).innerText = state;
+                        } else {
+                            state = "错误";
+                            document.getElementById("right" + quesNo).innerText = "正确选项：" + rightAnswer;
+                            document.getElementById("result" + quesNo).innerText = state;
+                            document.getElementById("result" + quesNo).style = "color:red";
+                        }
 
+
+                    }
                 } else {
-                    $.messager.alert("测试结果", "内部错误", "info");
+                    alert("内部错误");
                 }
             }
         })
@@ -228,7 +228,7 @@
 
         var end = $("#totalTime").val();
         $('#countdown2').ClassyCountdown({
-            end: $.now() + end * 1,
+            end: $.now() + 10,
             style: {
                 element: "",
                 textResponsive: .5,
@@ -268,11 +268,13 @@
             },
             onEndCallback: function() {
                 console.log("Time out!");
-                $.messager.alert('提示','答题结束!','info', function (r) {
-                    if (r) {
-
-                    }
-                });
+//                $.messager.alert('提示','答题结束!','info', function (r) {
+//                    if (r) {
+//
+//                    }
+//                });
+                alert("答题时间结束");
+                submit();
             }
         })
     }), 2000);

@@ -15,4 +15,13 @@
 <script type="text/javascript" src="${ctx}/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="${ctx}/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${ctx}/easyui/locale/easyui-lang-zh_CN.js"></script>
+<link rel="stylesheet" type="text/css" href="${ctx}/css/default.css">
+
+<script src="${ctx}/js/jquery.min.js"></script>
+<script src="${ctx}/js/jquery.knob.js"></script>
+<script src="${ctx}/js/jquery.throttle.js"></script>
+<script src="${ctx}/js/jquery.classycountdown.js"></script>
+
+<link rel="stylesheet" type="text/css" href="${ctx}/css/jquery.classycountdown.css" />
+
 
