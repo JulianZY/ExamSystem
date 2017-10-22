@@ -1,7 +1,10 @@
 package com.test.testsys.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -12,8 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.test.testsys.entity.Choice;
 import com.test.testsys.entity.ResultData;
+import com.test.testsys.util.ChoiceSelectEnum;
+import com.test.testsys.util.OperateUtils;
 import com.test.testsys.util.PropertiesUtil;
 @RunWith(SpringJUnit4ClassRunner.class)   
 @ContextConfiguration(locations = {"classpath*:spring-servlet.xml","classpath*:applicationContext.xml"})
@@ -41,18 +47,29 @@ public class ChoiceServciceTest {
 	public void testAddQuestion2() {
 		Choice c = null;
 		ResultData result = null;
+		int round = 50;
 		int size = 10;
-		for(int i = 0;i < size;i++) {
-			c = new Choice();
-			c.setChoiceA("哈哈哈" + i + i);
-			c.setChoiceB("呵呵呵" + i + i);
-			c.setChoiceC("好好好" + i + i);
-			c.setChoiceD("哼哼哼" + i + i);
-			c.setQuestionText("question" + i + i);
-			c.setRightAnswer("A");
-			result = choiceService.addQuestion(c);
-			System.out.println(result.getCode() + "," + result.getMsg());
-		}		
+		Random r = new Random(System.currentTimeMillis());
+		Map<Integer,String> selectMap = new HashMap<Integer,String>();
+		selectMap.put(ChoiceSelectEnum.A.getSelectCode(), ChoiceSelectEnum.A.getSelectValue());
+		selectMap.put(ChoiceSelectEnum.B.getSelectCode(), ChoiceSelectEnum.B.getSelectValue());
+		selectMap.put(ChoiceSelectEnum.C.getSelectCode(), ChoiceSelectEnum.C.getSelectValue());
+		selectMap.put(ChoiceSelectEnum.D.getSelectCode(), ChoiceSelectEnum.D.getSelectValue());
+		for(int j = 0;j < round;j++) {
+			for(int i = 0;i < size;i++) {
+				c = new Choice();
+				c.setChoiceA(j + "-哈哈哈-" + i + i);
+				c.setChoiceB(j + "-呵呵呵-" + i + i);
+				c.setChoiceC(j + "-好好好-" + i + i);
+				c.setChoiceD(j + "哼哼哼" + i + i);
+				c.setQuestionText(j + "+++++++++++++++++============字符测试=====================-question-======================================+++++++++++++++++++++++" + i + i);
+				int index = r.nextInt(100)%4 + 1;
+				c.setRightAnswer(selectMap.get(index));
+				result = choiceService.addQuestion(c);
+				System.out.println(result.getCode() + "," + result.getMsg());
+			}		
+		}
+		
 		System.out.println("over2");
 	}
 	
@@ -99,6 +116,17 @@ public class ChoiceServciceTest {
 		String result = PropertiesUtil.getProperty("totalTime");
 		System.out.println(result);
 		System.out.println("over6");
+	}
+	
+	@Test
+	public void testRandom() {
+		Integer num = 400;
+		Integer maxNum = 1000;
+		List<Integer> randomList = OperateUtils.generateRandomArray(num, maxNum);
+		if(randomList != null && randomList.size() > 0) {
+			System.out.println(JSONUtils.toJSONString(randomList));
+		}
+		System.out.println("over7");
 	}
 
 }

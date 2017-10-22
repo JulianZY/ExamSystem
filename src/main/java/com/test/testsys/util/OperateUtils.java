@@ -4,8 +4,9 @@
 package com.test.testsys.util;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -24,27 +25,35 @@ public class OperateUtils {
 		if(num < 0 || maxNum < 0 || num > maxNum) {
 			return null;
 		}
-		Set<Integer> result = new HashSet<Integer>();
+		Random random = new Random(System.currentTimeMillis());
+		Set<Integer> result = new LinkedHashSet<Integer>();
 		int number = 0;
 		int capMax = num > 50 ? (int)(num * 0.95) : (int)(num * 0.5); //随机数目达到99%剩下的数字用遍历获取
+		if(num * 1.0 / maxNum < 0.4 ) {  // 要抽取的数目占总数比例低于40%，直接全部随机生成
+			capMax = num;
+		}
 		while(result.size() < capMax) {
-			number = (int)(Math.random()*maxNum);
+			number = random.nextInt(maxNum);
 			if(number < maxNum) {
 				result.add(number);
 			}			
 		}
 		int flag = 0;
-		for(int pre = maxNum/2,post = maxNum/2 + 1;pre>=0&&post<maxNum&&result.size()<num;) {
+		for(int pre = maxNum/2,post = maxNum/2 + 1;result.size()<num;) {
 			if(flag%2 == 0) {
-				while(result.contains(pre)) {
+				while(result.contains(pre) && pre >=0 ) {
 					--pre;
 				}
-				result.add(pre);
+				if(pre >= 0) {
+					result.add(pre);
+				}
 			} else {
-				while(result.contains(post)) {
+				while(result.contains(post) && post < maxNum) {
 					++post;
 				}
-				result.add(post);
+				if(post < maxNum) {
+					result.add(post);
+				}
 			}
 			++flag;
 		}

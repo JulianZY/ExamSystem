@@ -7,7 +7,7 @@ CREATE TABLE t_testentity(
 -- 创建选择题表
 CREATE TABLE t_choice(
     id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    uuid VARCHAR(128) PRIMARY KEY NOT NULL,
+    uuid VARCHAR(128) NOT NULL,
     question_text  TEXT(512) NOT NULL,
     choice_a  TEXT(128) NOT NULL,
     choice_b  TEXT(128) NOT NULL,
