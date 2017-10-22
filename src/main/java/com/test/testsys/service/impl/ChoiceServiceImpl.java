@@ -5,21 +5,29 @@ package com.test.testsys.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.test.testsys.dao.ChoiceDao;
 import com.test.testsys.dto.ChoiceResultDto;
+import com.test.testsys.dto.ChoiceStateDto;
 import com.test.testsys.entity.Choice;
 import com.test.testsys.entity.ResultData;
 import com.test.testsys.service.IChoiceService;
+import com.test.testsys.util.ChoiceSelectEnum;
 import com.test.testsys.util.ChoiceStateEnum;
+import com.test.testsys.util.OperateUtils;
 
 /**
  * 选择题目业务层
@@ -28,6 +36,8 @@ import com.test.testsys.util.ChoiceStateEnum;
  */
 @Service("choiceService")
 public class ChoiceServiceImpl implements IChoiceService {
+	
+	private Logger log = LoggerFactory.getLogger(ChoiceServiceImpl.class);
 	
 	@Resource
 	ChoiceDao choiceDao;
@@ -52,7 +62,7 @@ public class ChoiceServiceImpl implements IChoiceService {
 				result.setMsg("object is null");
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("add or update failed-log", e);
 			result.setCode("-1");
 			result.setMsg("add or update failed");
 		}
@@ -71,7 +81,7 @@ public class ChoiceServiceImpl implements IChoiceService {
 				result.setMsg("ids is null");
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("delete failed-log", e);
 			result.setCode("-1");
 			result.setMsg("delete failed");
 		}
@@ -90,7 +100,7 @@ public class ChoiceServiceImpl implements IChoiceService {
 				result.setMsg("uuids is null");
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("delete failed-log", e);
 			result.setCode("-1");
 			result.setMsg("delete failed");
 		}
@@ -105,7 +115,7 @@ public class ChoiceServiceImpl implements IChoiceService {
 				result = choiceDao.queryByIds(ids);
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("qurey by ids failed-log", e);
 		}
 		return result;
 	}
@@ -118,7 +128,7 @@ public class ChoiceServiceImpl implements IChoiceService {
 				result = choiceDao.queryByUuids(uuids);
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("query by uuids failed-log", e);
 		}
 		return result;
 	}
@@ -129,7 +139,7 @@ public class ChoiceServiceImpl implements IChoiceService {
 		try {
 			result = choiceDao.queryAll();				
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("query all failed-log", e);
 		}
 		return result;
 	}
@@ -143,41 +153,20 @@ public class ChoiceServiceImpl implements IChoiceService {
 			if(uuidList == null || capSize < num) {
 				throw new Exception("题库为空或题库数目不足");
 			}
-			boolean capFlag = false; // num 大小为题库总数的一半以上,采用剔除策略,默认不采用剔除策略
-			if(num > capSize/2) {
-				capFlag = true;
-			}
-			Set<Integer> indexSet = new HashSet<Integer>(); //不重复的下标列表
+			List<Integer> indexList = OperateUtils.generateRandomArray(num, capSize); //不重复的下标列表
 			List<String> selectUuidList = new ArrayList<String>();
-			int index = 0;
-			if(!capFlag) { //不采用剔除策略
-				while(indexSet.size() < num) { // 生成题号随机编码
-					index = (int)(Math.random()*capSize);
-					if(index < capSize) {
-						indexSet.add(index);
-					}
-				}
-				for(Integer i : indexSet) {			
-					selectUuidList.add(uuidList.get(i));
-				}
-			} else { //采用剔除策略,indexSet存储不选定的index
-				while(indexSet.size() <= capSize - num) {
-					index = (int)(Math.random()*capSize);
-					if(index < capSize) {
-						indexSet.add(index);
-					}
-				}
-				for(int i = 0;i < capSize;++i) {
-					if(!indexSet.contains(i)) { 
-						selectUuidList.add(uuidList.get(i));
-					}
-				}
+			for(Integer i : indexList) {			
+				selectUuidList.add(uuidList.get(i));
 			}
 			//根据选定的uuid列表获取返回题目列表
-			result = choiceDao.queryByUuids(selectUuidList);
+			List<Choice> tempList = choiceDao.queryByUuids(selectUuidList);
+			List<Integer> randomIndexList = OperateUtils.generateRandomArray(num, num);
+			result = new ArrayList<Choice>();
+			for(Integer index : randomIndexList) {
+				result.add(tempList.get(index));
+			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			log.error("random generate failed-log," + e.getMessage(), e);
 		}
 		return result;
 	}
@@ -187,21 +176,23 @@ public class ChoiceServiceImpl implements IChoiceService {
 		List<ChoiceResultDto> result = null;
 		try {
 			if(choices != null && choices.size() > 0) {
-				result = new ArrayList<ChoiceResultDto>();
+				result = new LinkedList<ChoiceResultDto>();
 				ChoiceResultDto tempChoice = null;
+				int quesNo = 1;
 				for(Choice c : choices) { 
-					tempChoice = transChoiceResultDto(c,null,isFilterAnswer);
+					tempChoice = transChoiceResultDto(c,isFilterAnswer);
+					tempChoice.setQuesNo(quesNo++);
 					result.add(tempChoice);
 				}
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("trand choiceResultDtoList failed-log", e);
 		}
 		return null;
 	}
 
 	@Override
-	public ChoiceResultDto transChoiceResultDto(Choice c, ChoiceStateEnum choiceState, boolean isFilterAnswer) {
+	public ChoiceResultDto transChoiceResultDto(Choice c, boolean isFilterAnswer) {
 		ChoiceResultDto result = null;
 		try {
 			result = new ChoiceResultDto();
@@ -211,18 +202,68 @@ public class ChoiceServiceImpl implements IChoiceService {
 			result.setChoiceC(c.getChoiceC());
 			result.setChoiceD(c.getChoiceD());
 			result.setQuestionText(c.getQuestionText());
-			if(choiceState == null) {
-				result.setState(ChoiceStateEnum.UNKNOWN.getStateCode());
-			} else {
-				result.setState(choiceState.getStateCode());
-			}
 			if(!isFilterAnswer) {
 				result.setRightAnswer(c.getRightAnswer());
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("transfer choiceResultDto failed-log", e);
 		}
-		return null;
+		return result;
+	}
+
+	@Override
+	public List<ChoiceStateDto> judgeResult(List<ChoiceStateDto> inputList, Map<String, Object> configMap) {
+		List<ChoiceStateDto> result = null;
+		try {
+			if(inputList != null && inputList.size() > 0) {
+				//获取题目列表
+				List<String> uuids = new ArrayList<String>();
+				for(ChoiceStateDto csd : inputList) {
+					uuids.add(csd.getUuid());
+				}
+				List<Choice> quesList = choiceDao.queryByUuids(uuids);
+				if(quesList != null && quesList.size() > 0) {
+					Map<String,Choice> quesMap = new HashMap<String,Choice>();
+					for(Choice c : quesList) {
+						quesMap.put(c.getUuid(), c);
+					}
+					result = new ArrayList<ChoiceStateDto>();
+					ChoiceStateDto tempDto = null;
+					int mark = 0; // 总分
+					for(ChoiceStateDto csdo : inputList) {
+						tempDto = new ChoiceStateDto();
+						tempDto.setQuesNo(csdo.getQuesNo());
+						tempDto.setSelectChoice(csdo.getSelectChoice());
+						tempDto.setUuid(csdo.getUuid());
+						tempDto.setRightAnswer(quesMap.get(csdo.getUuid()).getRightAnswer());
+						if(tempDto.getRightAnswer().equals(csdo.getSelectChoice())) {
+							tempDto.setState(ChoiceStateEnum.RIGHT.getStateCode());
+							++mark;
+						} else if(!ChoiceSelectEnum.A.getSelectValue().equals(csdo.getSelectChoice())
+									&& !ChoiceSelectEnum.B.getSelectValue().equals(csdo.getSelectChoice())
+									&& !ChoiceSelectEnum.C.getSelectValue().equals(csdo.getSelectChoice())
+									&& !ChoiceSelectEnum.D.getSelectValue().equals(csdo.getSelectChoice())) {
+							tempDto.setState(ChoiceStateEnum.UNKNOWN.getStateCode());
+						} else {
+							tempDto.setState(ChoiceStateEnum.WRONG.getStateCode());
+						}
+						result.add(tempDto);
+					}
+					Collections.sort(result, new Comparator<ChoiceStateDto>() {
+						@Override
+						public int compare(ChoiceStateDto c1,ChoiceStateDto c2) {
+							return c1.getQuesNo().compareTo(c2.getQuesNo());
+						}
+					});
+					configMap.put("mark", mark);
+				} else {
+					log.error("所选题目不存在或已删除");
+				}			
+			}
+		} catch(Exception e) {
+			log.error("transfer choiceResultDto failed-log", e);
+		}
+		return result;
 	}
 	
 }

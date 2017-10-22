@@ -24,15 +24,16 @@ public class ChoiceResultDto {
 	
 	private String rightAnswer;
 	
-	private Integer state; //答题状态 -1：未答,0：答错,1：答对
+	private Integer quesNo; //题号
+	
+	private String selectChoice = "";
 
 	public ChoiceResultDto() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
+	}	
 
 	public ChoiceResultDto(String uuid, String questionText, String choiceA, String choiceB, String choiceC,
-			String choiceD, String rightAnswer) {
+			String choiceD, String rightAnswer, Integer quesNo, String selectChoice) {
 		super();
 		this.uuid = uuid;
 		this.questionText = questionText;
@@ -41,6 +42,8 @@ public class ChoiceResultDto {
 		this.choiceC = choiceC;
 		this.choiceD = choiceD;
 		this.rightAnswer = rightAnswer;
+		this.quesNo = quesNo;
+		this.selectChoice = selectChoice;
 	}
 
 	public String getUuid() {
@@ -99,12 +102,20 @@ public class ChoiceResultDto {
 		this.rightAnswer = rightAnswer;
 	}
 
-	public Integer getState() {
-		return state;
+	public Integer getQuesNo() {
+		return quesNo;
 	}
 
-	public void setState(Integer state) {
-		this.state = state;
+	public void setQuesNo(Integer quesNo) {
+		this.quesNo = quesNo;
+	}
+
+	public String getSelectChoice() {
+		return selectChoice;
+	}
+
+	public void setSelectChoice(String selectChoice) {
+		this.selectChoice = selectChoice;
 	}
 	
 }

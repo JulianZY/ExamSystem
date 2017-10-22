@@ -4,11 +4,12 @@
 package com.test.testsys.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.test.testsys.dto.ChoiceResultDto;
+import com.test.testsys.dto.ChoiceStateDto;
 import com.test.testsys.entity.Choice;
 import com.test.testsys.entity.ResultData;
-import com.test.testsys.util.ChoiceStateEnum;
 
 /**
  * 选择题业务操作接口
@@ -58,7 +59,14 @@ public interface IChoiceService {
 	public List<ChoiceResultDto> generateReturn(List<Choice> choices,boolean isFilterAnswer);
 	
 	/**
-	 * 转换ChoiceResultDto对象 + 判定答题状态(-1-未答,0-答错,1-答对)
+	 * 转换ChoiceResultDto对象
 	 * */
-	public ChoiceResultDto transChoiceResultDto(Choice c, ChoiceStateEnum choiceState, boolean isFilterAnswer);
+	public ChoiceResultDto transChoiceResultDto(Choice c, boolean isFilterAnswer);
+	
+	/**
+	 * 判定答题状态
+	 * @param inputList 考生提交列表
+	 * @param configMap 存储总分等对象，不为空
+	 * */
+	public List<ChoiceStateDto> judgeResult(List<ChoiceStateDto> inputList,Map<String,Object> configMap);
 }
