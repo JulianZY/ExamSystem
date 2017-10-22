@@ -41,12 +41,22 @@
 <head>
     <title>网约车考试系统</title>
 </head>
-<body background="${ctx}/img/background.png">
-    <div id="titleDiv" style="position: relative;margin-top:100px; margin-left: 100px">
-        <h1>欢迎来到网约车答题系统，点击开始按钮开始答题</h1><br>
-        <div id="startBtn">
-            <a id="btlogin" onclick="startClick()" href="#">开 始</a>
-        </div>
+<body>
+
+
+<div  style="float: left">
+    <img src="${ctx}/img/logo.jpg">
+</div>
+<div id="titleDiv" style="float: left; margin-top: 10%">
+    <h1>欢迎来到网约车答题系统，点击开始按钮开始答题</h1><br>
+    <div id="startBtn">
+        <a id="btlogin" onclick="startClick()" href="#">开 始</a>
     </div>
+</div>
+<div style="float: left">
+    <img src="${ctx}/img/logo.jpg">
+</div>
+
+
 </body>
 </html>
