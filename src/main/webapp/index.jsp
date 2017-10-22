@@ -39,11 +39,11 @@
     }
 </script>
 <head>
-    <title>XXX考试系统</title>
+    <title>网约车考试系统</title>
 </head>
 <body background="${ctx}/img/background.png">
     <div id="titleDiv" style="position: relative;margin-top:100px; margin-left: 100px">
-        <h1>欢迎来到XXX答题系统，点击开始按钮开始答题</h1><br>
+        <h1>欢迎来到网约车答题系统，点击开始按钮开始答题</h1><br>
         <div id="startBtn">
             <a id="btlogin" onclick="startClick()" href="#">开 始</a>
         </div>
