@@ -53,9 +53,7 @@
         <a id="btlogin" onclick="startClick()" href="#">开 始</a>
     </div>
 </div>
-<div style="float: left">
-    <img src="${ctx}/img/logo.jpg">
-</div>
+
 
 
 </body>
