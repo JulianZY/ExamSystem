@@ -1,9 +1,9 @@
 package com.test.testsys.controller;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.test.testsys.dto.ChoiceResultDto;
+import com.test.testsys.dto.ChoiceStateDto;
 import com.test.testsys.entity.Choice;
 import com.test.testsys.entity.ResultData;
 import com.test.testsys.service.IChoiceService;
@@ -107,29 +108,18 @@ public class MainViewController {
 	public JSONObject getAllQuestion() {
 		JSONObject result = new JSONObject();
 		try {
-			/*
-			 * 调用service层接口，返回一个list
-			 */
-			// List<Choice> list = new ArrayList<>();
-			// Date date = new Date();
-			// Choice choice1 = new Choice(1, "123", "test", "testa", "testb", "testc",
-			// "testd", "A",
-			// new Timestamp(date.getTime()), new Timestamp(date.getTime()));
-			// Choice choice2 = new Choice(2, "124", "test", "testa", "testb", "testc",
-			// "testd", "A",
-			// new Timestamp(date.getTime()), new Timestamp(date.getTime()));
-			// list.add(choice1);
-			// list.add(choice2);
 			List<Choice> list = choiceService.queryAllQuestions();
-			if (list != null && list.size() > 0) {
-				result.put("total", list.size());
-				result.put("rows", list);
+			List<ChoiceResultDto> returnList = choiceService.generateReturn(list, true); 
+			if (returnList != null && returnList.size() > 0) {
+				result.put("total", returnList.size());
+				result.put("rows", returnList);
 			} else {
 				result.put("total", 0);
 				result.put("rows", new Object[] {});
 			}
 			result.put("success", true);
 		} catch (Exception e) {
+			log.error("获取题目列表失败", e);
 			result.put("total", 0);
 			result.put("rows", new Object[] {});
 			result.put("success", false);
@@ -203,18 +193,35 @@ public class MainViewController {
 		log.info("input param choice : ", choice);
 		JSONObject result = new JSONObject();
 		try {
-			ResultData resultData = choiceService.addQuestion(choice);
-			if (resultData.success()) {
-				result.put("message", resultData.getMsg());
-				result.put("success", true);
-			} else {
-				result.put("message", resultData.getMsg());
-				result.put("success", false);
-			}
+//			List<String> uuids = new ArrayList<String>();
+//			uuids.add(choice.getUuid());
+//			List<Choice> oldChoices = choiceService.queryQuestionsByUuids(uuids);
+//			Choice oldChoice = null;
+//			if(oldChoices != null && oldChoices.size() > 0) {
+//				oldChoice = oldChoices.get(0);
+//				oldChoice.setChoiceA(choice.getChoiceA());
+//				oldChoice.setChoiceB(choice.getChoiceB());
+//				oldChoice.setChoiceC(choice.getChoiceC());
+//				oldChoice.setChoiceD(choice.getChoiceD());
+//				oldChoice.setQuestionText(choice.getQuestionText());
+//				oldChoice.setRightAnswer(choice.getRightAnswer());
+				ResultData resultData = choiceService.addQuestion(choice);
+				if (resultData.success()) {
+					result.put("message", resultData.getMsg());
+					result.put("success", true);
+				} else {
+					result.put("message", resultData.getMsg());
+					result.put("success", false);
+				}
+//				result.put("message", "更新成功");
+//				result.put("success", true);
+//			} else {
+//				result.put("message", "题目不存在或已删除");
+//				result.put("success", false);
+//			}						
 		} catch (Exception e) {
 			result.put("success", false);
 		}
-
 		return result;
 	}
 
@@ -290,5 +297,32 @@ public class MainViewController {
 		}
 		return result;
 	}
+	
+	/**
+	 * 提交答题结果
+	 * @param choiceList
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/submitPaper.action", method = RequestMethod.POST)
+	public JSONObject submitPaper(@RequestBody List<ChoiceStateDto> choiceList) {
+		log.info("input param choice : ", choiceList);
+		JSONObject result = new JSONObject();
+		try {
+			Map<String,Object> paramMap = new HashMap<String,Object>();
+			paramMap.put("mark", 0);
+			List<ChoiceStateDto> judgeList = choiceService.judgeResult(choiceList, paramMap);
+			result.put("success", true);
+			result.put("data",judgeList);
+			result.put("mark", paramMap.get("mark"));
+		} catch (Exception e) {
+			log.error("获取答题结果失败", e);
+			result.put("success", false);
+			result.put("data",null);
+		}
+
+		return result;
+	}
+	
 
 }
