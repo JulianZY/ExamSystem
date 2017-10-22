@@ -67,7 +67,7 @@ public class MainViewController {
 			list.add(choice1);
 		}*/
 		String totalTime = PropertiesUtil.getProperty("totalTime");
-		mv.addObject("questionList",examList != null ? JSONUtils.toJSONString(examList) : null);
+		mv.addObject("questionList",examList != null ? examList : null);
 		mv.addObject("totalTime", Integer.valueOf(totalTime));
 		mv.setViewName("question");
 		return mv;
@@ -110,9 +110,9 @@ public class MainViewController {
 		try {
 			List<Choice> list = choiceService.queryAllQuestions();
 			List<ChoiceResultDto> returnList = choiceService.generateReturn(list, true); 
-			if (returnList != null && returnList.size() > 0) {
-				result.put("total", returnList.size());
-				result.put("rows", returnList);
+			if (list != null && list.size() > 0) {
+				result.put("total", list.size());
+				result.put("rows", list);
 			} else {
 				result.put("total", 0);
 				result.put("rows", new Object[] {});

@@ -52,7 +52,7 @@
                 url : "/question/delete.action",
                 type : "POST",
                 contentType : "application/json;charset=utf-8",
-                data : JSON.stringify(rows),
+                data : JSON.stringify(ids),
                 dataType : "json",
                 success : function(data) {
                     if (data.success == true) {

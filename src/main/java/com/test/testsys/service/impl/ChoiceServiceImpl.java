@@ -188,7 +188,7 @@ public class ChoiceServiceImpl implements IChoiceService {
 		} catch(Exception e) {
 			log.error("trand choiceResultDtoList failed-log", e);
 		}
-		return null;
+		return result;
 	}
 
 	@Override

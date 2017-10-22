@@ -69,7 +69,6 @@
     </div>
     <script>
         function submitForm(){
-            debugger;
             if (!checkForm()) {
                 return;
             }

@@ -57,7 +57,7 @@
 		order by create_time asc
 	</select>
 	<select id="queryAll"  resultType="Choice">
-		select * from t_choice orderby create_time asc
+		select * from t_choice order by create_time asc
 	</select>
 	<select id="queryAllUuids"  resultType="String">
 		select 
