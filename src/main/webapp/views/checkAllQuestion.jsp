@@ -11,6 +11,7 @@
 <html>
 <head>
     <title>试题管理</title>
+    <%--<script src="${ctx}/js/jquery.min.js"></script>--%>
 </head>
 <body>
 <div style="margin:20px 0;"></div>
@@ -31,6 +32,18 @@
     </tr>
     </thead>
 </table>
+    <%--<table class="layui-table" lay-data="{height:315, url:'/question/getAllQuestions.action', page:true, id:'test'}" lay-filter="test">--%>
+        <%--<th lay-data="{checkbox: true, LAY_CHECKED: false}"></th>--%>
+        <%--&lt;%&ndash;<th data-options="field:'id',width:60">题目序号</th>&ndash;%&gt;--%>
+
+        <%--<th lay-data="{field:'uuid'"}>题目编号</th>--%>
+        <%--<th lay-data="{field:'questionText',width:800}">题目</th>--%>
+        <%--<th lay-data="{field:'choiceA',width:200}">选项A</th>--%>
+        <%--<th lay-data="{field:'choiceB',width:200}">选项B</th>--%>
+        <%--<th lay-data="{field:'choiceC',width:200}">选项C</th>--%>
+        <%--<th lay-data="{field:'choiceD',width:200}">选项D</th>--%>
+        <%--<th lay-data="{field:'rightAnswer',width:80}">正确选项</th>--%>
+    <%--</table>--%>
 <script type="text/javascript">
     var toolbar = [{
         text:'添加',

@@ -35,7 +35,7 @@
 <script type="text/javascript">
 //    src="./WEB-INF/js/mainPage.js";
     function startClick() {
-        window.location.href="/question/answerFrame.action"
+        window.location.href="${ctx}/question/answerFrame.action"
     }
 </script>
 <head>

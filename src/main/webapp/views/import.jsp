@@ -54,10 +54,10 @@
                 <h3>请输入正确答案</h3>
                 <div style="margin:10px 0;"></div>
                 <div>
-                    <label>A:</label><input name="rightAnswer" type="radio" id="answerA" value="A"/><span style="margin-right: 20px"></span>
-                    <label>B:</label><input name="rightAnswer" type="radio" id="answerB" value="B"/><span style="margin-right: 20px"></span>
-                    <label>C:</label><input name="rightAnswer" type="radio" id="answerC" value="C"/><span style="margin-right: 20px"></span>
-                    <label>D:</label><input name="rightAnswer" type="radio" id="answerD" value="D"/>
+                    <label>A:</label><input name="rightAnswer" type="checkbox" id="answerA" value="A"/><span style="margin-right: 20px"></span>
+                    <label>B:</label><input name="rightAnswer" type="checkbox" id="answerB" value="B"/><span style="margin-right: 20px"></span>
+                    <label>C:</label><input name="rightAnswer" type="checkbox" id="answerC" value="C"/><span style="margin-right: 20px"></span>
+                    <label>D:</label><input name="rightAnswer" type="checkbox" id="answerD" value="D"/>
                 </div>
                 <div style="text-align:center;padding:5px 0; margin-top: 20px">
                     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">完成</a><span style="margin-right: 20px"></span>
@@ -75,13 +75,25 @@
             if (!checkForm()) {
                 return;
             }
+
             var obj = new Object();
             obj.questionText = $("#questionText").val();
             obj.choiceA = $("#choiceA").val();
             obj.choiceB = $("#choiceB").val();
             obj.choiceC = $("#choiceC").val();
             obj.choiceD = $("#choiceD").val();
-            obj.rightAnswer = $('input:radio[name="rightAnswer"]:checked').val();
+            var rightList = $("input[name='rightAnswer']:checked");
+            var test = "";
+            rightList.each(function (i, n) {
+                test += (this).value;
+            });
+            obj.rightAnswer = test;
+
+//            for (var i = 0; i < rightList.size(); i++) {
+//                test = test + rightList[i].val();
+//            }
+//            obj.rightAnswer = $('input:radio[name="rightAnswer"]:checked').val();
+            debugger;
             $.ajax({
                 url : '/question/add.action',
                 type : 'POST',
@@ -130,8 +142,8 @@
                 $.messager.alert('提示', '选项B不能为空', 'warning');
                 return false;
             }
-            if ($('input:radio[name="rightAnswer"]:checked').val() == null
-                || $('input:radio[name="rightAnswer"]:checked').val() == "") {
+            if ($('input[name="rightAnswer"]:checked') == null
+                || $('input[name="rightAnswer"]:checked').size() == 0) {
                 $.messager.alert('提示', '', 'warning');
                 return false;
             }

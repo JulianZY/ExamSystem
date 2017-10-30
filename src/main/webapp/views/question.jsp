@@ -15,6 +15,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="${ctx}/js/jquery.min.js"></script>
+    <script src="${ctx}/js/jquery.knob.js"></script>
+    <script src="${ctx}/js/jquery.throttle.js"></script>
+    <script src="${ctx}/js/jquery.classycountdown.js"></script>
     <title>开始答题</title>
 
     <style>
@@ -47,10 +51,23 @@
                             <input id="uuid" type="hidden" value="${n.uuid}"/>
                             <input id="questionText" type="hidden" value="${n.questionText}"/>
                             <label  style="color:black; font-weight:bold; font-size: larger">${n.quesNo}. ${n.questionText}</label><span style="margin-bottom: 20px"></span><br>
-                            <input id="radioA" type="radio" name="rightAnswer${n.quesNo}" value="A"/><label id="choiceA">A: ${n.choiceA}</label><br>
-                            <input id="radioB" type="radio" name="rightAnswer${n.quesNo}" value="B"/><label id="choiceB">B: ${n.choiceB}</label><br>
-                            <input id="radioC" type="radio" name="rightAnswer${n.quesNo}" value="C"/><label id="choiceC">C: ${n.choiceC}</label><br>
-                            <input id="radioD" type="radio" name="rightAnswer${n.quesNo}" value="D"/><label id="choiceD">D: ${n.choiceD}</label><br>
+                            <c:choose>
+                                <c:when test="${n.rightAnswer.length() == 1}">
+                                    <input id="radioA" type="radio" name="rightAnswer${n.quesNo}" value="A"/><label id="choiceA">A: ${n.choiceA}</label><br>
+                                    <input id="radioB" type="radio" name="rightAnswer${n.quesNo}" value="B"/><label id="choiceB">B: ${n.choiceB}</label><br>
+                                    <input id="radioC" type="radio" name="rightAnswer${n.quesNo}" value="C"/><label id="choiceC">C: ${n.choiceC}</label><br>
+                                    <input id="radioD" type="radio" name="rightAnswer${n.quesNo}" value="D"/><label id="choiceD">D: ${n.choiceD}</label><br>
+                                    <input type="hidden" id="type" value="single">
+                                </c:when>
+                                <c:otherwise>
+                                    <input id="checkboxA" type="checkbox" name="rightAnswer${n.quesNo}" value="A"/><label id="choiceA">A: ${n.choiceA}</label><br>
+                                    <input id="checkboxB" type="checkbox" name="rightAnswer${n.quesNo}" value="B"/><label id="choiceB">B: ${n.choiceB}</label><br>
+                                    <input id="checkboxC" type="checkbox" name="rightAnswer${n.quesNo}" value="C"/><label id="choiceC">C: ${n.choiceC}</label><br>
+                                    <input id="checkboxD" type="checkbox" name="rightAnswer${n.quesNo}" value="D"/><label id="choiceD">D: ${n.choiceD}</label><br>
+                                    <input type="hidden" id="type" value="multi">
+                                </c:otherwise>
+                            </c:choose>
+
                             <label id="result${n.quesNo}"></label><br>
                             <label id="right${n.quesNo}"></label>
                                 <%--<c:out value="${n}"/>--%>
@@ -88,7 +105,17 @@
             var obj = new Object();
             obj.quesNo = $("#" + i + " #quesNo").val();
             obj.uuid = $("#" + i + " #uuid").val();
-            obj.selectChoice = $("input:radio[name=rightAnswer"+ i +"]:checked").val();
+            if ($("#" + i + " #type").val() == 'single') {
+                obj.selectChoice = $("input:radio[name=rightAnswer"+ i +"]:checked").val();
+            } else {
+                var rightList = $("input[name=rightAnswer" + i + "]:checked");
+                var test = "";
+                rightList.each(function (i, n) {
+                    test += (this).value;
+                });
+                obj.selectChoice = test;
+            }
+
             allAnswer.push(obj);
         }
         $.ajax({
@@ -228,7 +255,7 @@
 
         var end = $("#totalTime").val();
         $('#countdown2').ClassyCountdown({
-            end: $.now() + 10,
+            end: $.now() + end * 1,
             style: {
                 element: "",
                 textResponsive: .5,

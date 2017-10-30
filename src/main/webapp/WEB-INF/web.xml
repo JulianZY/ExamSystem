@@ -21,9 +21,9 @@
 		<param-name>webAppRootKey</param-name>
 		<param-value>webApp.root</param-value>
 	</context-param>
-	<listener>  
-        <listener-class>org.springframework.web.util.WebAppRootListener</listener-class>  
-    </listener>  
+	<listener>
+        <listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
+    </listener>
 	<!-- 加载Spring配置文件 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>

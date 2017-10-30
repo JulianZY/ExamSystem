@@ -202,6 +202,7 @@ public class ChoiceServiceImpl implements IChoiceService {
 			result.setChoiceC(c.getChoiceC());
 			result.setChoiceD(c.getChoiceD());
 			result.setQuestionText(c.getQuestionText());
+			result.setRightAnswer(c.getRightAnswer());
 			if(!isFilterAnswer) {
 				result.setRightAnswer(c.getRightAnswer());
 			}
